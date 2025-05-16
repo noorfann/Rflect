@@ -23,7 +23,7 @@ enum Mood: Int, Codable, CaseIterable {
 }
 
 @Model
-class JournalEntry {
+class JournalModel {
     @Attribute(.unique) var id: UUID
     var date: Date
     var title: String

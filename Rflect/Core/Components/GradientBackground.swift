@@ -1,5 +1,5 @@
 //
-//  GradientBackgroundView.swift
+//  GradientBackground.swift
 //  Rflect
 //
 //  Created by Zulfikar Noorfan on 14/05/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GradientBackgroundView: View {
+struct GradientBackground: View {
     // Customizable gradient colors with default values
     var startColor: Color = Color.blue.opacity(0.6)
     var middleColor: Color = Color.purple.opacity(0.4)
@@ -31,7 +31,7 @@ struct GradientBackgroundModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         ZStack {
-            GradientBackgroundView(
+            GradientBackground(
                 startColor: startColor,
                 middleColor: middleColor,
                 endColor: endColor
@@ -57,5 +57,5 @@ extension View {
 }
 
 #Preview {
-    GradientBackgroundView()
+    GradientBackground()
 }

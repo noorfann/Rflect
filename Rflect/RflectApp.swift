@@ -5,37 +5,38 @@
 //  Created by Zulfikar Noorfan on 14/05/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 // No top-level code before @main attribute
 @main
 struct RflectApp: App {
     // SwiftData container for the app
     let container: ModelContainer
-    
+
     // Initialize the viewModel with the container's context
-    @StateObject private var viewModel: JournalViewModel
-    
+    @StateObject private var journalVM: JournalViewModel
+    @StateObject private var homeVM = HomeViewModel()
+
     init() {
         do {
             // Create a persistent container for JournalEntry
-            container = try ModelContainer(for: JournalEntry.self)
-            
+            container = try ModelContainer(for: JournalModel.self)
+
             // Initialize the viewModel with the container's context
             let context = container.mainContext
-            _viewModel = StateObject(wrappedValue: JournalViewModel(context: context))
+            _journalVM = StateObject(wrappedValue: JournalViewModel(context: context))
         } catch {
             // Handle container creation failure
             fatalError("Failed to create model container: \(error.localizedDescription)")
         }
     }
-    
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .modelContainer(container)
-                .environmentObject(viewModel)
+            HomeView()
+                .environmentObject(journalVM)
+                .environmentObject(homeVM)
         }
     }
 }
