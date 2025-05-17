@@ -9,8 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct JournalFormView: View {
-    @EnvironmentObject var viewModel: JournalViewModel
+    @EnvironmentObject var journalVM: JournalViewModel
     @EnvironmentObject var homeVM: HomeViewModel
+    @EnvironmentObject var settingsVM: SettingsViewModel
     @Environment(\.dismiss) var dismiss
 
     @State private var title: String = ""
@@ -47,13 +48,13 @@ struct JournalFormView: View {
                     Spacer()
                     FloatingActionButton(
                         action: {
-                            viewModel.addJournal(
+                            journalVM.addJournal(
                                 title: title, notes: notes, mood: selectedMood, date: entryDate)
                             dismiss()
                         }, icon: "checkmark"
                     )
                     .disabled(
-                        homeVM.settingsViewModel.showJournalTitle
+                        settingsVM.showJournalTitle
                             ? title.trimmingCharacters(in: .whitespaces).isEmpty : false
                     )
                 }
@@ -112,7 +113,7 @@ extension JournalFormView {
 
     private var journalForm: some View {
         VStack(spacing: 0) {
-            if homeVM.settingsViewModel.showJournalTitle {
+            if settingsVM.showJournalTitle {
                 TextField("Title", text: $title)
                     .font(.title)
                     .bold()
@@ -127,7 +128,7 @@ extension JournalFormView {
                 .scrollContentBackground(.hidden)
                 .cornerRadius(
                     10,
-                    corners: homeVM.settingsViewModel.showJournalTitle
+                    corners: settingsVM.showJournalTitle
                         ? [.bottomLeft, .bottomRight] : .allCorners
                 )
                 .foregroundStyle(Color.theme.secondaryText)
@@ -139,13 +140,13 @@ extension JournalFormView {
     private var submitButton: some View {
         FloatingActionButton(
             action: {
-                viewModel.addJournal(
+                journalVM.addJournal(
                     title: title, notes: notes, mood: selectedMood, date: entryDate)
                 dismiss()
             }, icon: "checkmark"
         )
         .disabled(
-            homeVM.settingsViewModel.showJournalTitle
+            settingsVM.showJournalTitle
                 ? title.trimmingCharacters(in: .whitespaces).isEmpty : false
         )
         .frame(maxWidth: .infinity, alignment: .trailing)
