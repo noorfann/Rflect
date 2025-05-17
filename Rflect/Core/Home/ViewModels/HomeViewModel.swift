@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 class HomeViewModel: ObservableObject {
     @Published var showingJournalForm = false
+    @Published var showingSettings = false
     @Published var selectedDate: Date = Date()
     @Published var selectedJournal: JournalModel?
     @Published var isShowingDetail = false

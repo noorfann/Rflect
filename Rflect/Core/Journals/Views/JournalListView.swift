@@ -14,11 +14,7 @@ struct JournalListView: View {
 
     var body: some View {
         ZStack(alignment: .center) {
-            GradientBackground(
-                startColor: Color.theme.background.opacity(0.1),
-                middleColor: Color.theme.background.opacity(0.6),
-                endColor: Color.theme.accent.opacity(0.8)
-            )
+            GradientBackground()
             if journalVM.journals.isEmpty {
                 JournalEmptyView(onTapAction: {
                     homeVM.showingJournalForm = true

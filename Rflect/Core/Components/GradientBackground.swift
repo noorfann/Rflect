@@ -8,14 +8,32 @@
 import SwiftUI
 
 struct GradientBackground: View {
-    // Customizable gradient colors with default values
-    var startColor: Color = Color.blue.opacity(0.6)
-    var middleColor: Color = Color.purple.opacity(0.4)
-    var endColor: Color = Color.pink.opacity(0.6)
-    
+    @EnvironmentObject private var settings: SettingsViewModel
+
+    // Optional custom colors
+    var startColor: Color?
+    var middleColor: Color?
+    var endColor: Color?
+
+    private var effectiveStartColor: Color {
+        startColor ?? settings.gradientStartColor
+    }
+
+    private var effectiveMiddleColor: Color {
+        middleColor ?? settings.gradientMiddleColor
+    }
+
+    private var effectiveEndColor: Color {
+        endColor ?? settings.gradientEndColor
+    }
+
     var body: some View {
         LinearGradient(
-            gradient: Gradient(colors: [startColor, middleColor, endColor]),
+            gradient: Gradient(colors: [
+                effectiveStartColor,
+                effectiveMiddleColor,
+                effectiveEndColor,
+            ]),
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -25,10 +43,10 @@ struct GradientBackground: View {
 
 // Convenience view modifier for adding the gradient background
 struct GradientBackgroundModifier: ViewModifier {
-    var startColor: Color = Color.blue.opacity(0.6)
-    var middleColor: Color = Color.purple.opacity(0.4)
-    var endColor: Color = Color.pink.opacity(0.6)
-    
+    var startColor: Color?
+    var middleColor: Color?
+    var endColor: Color?
+
     func body(content: Content) -> some View {
         ZStack {
             GradientBackground(
@@ -44,18 +62,20 @@ struct GradientBackgroundModifier: ViewModifier {
 // Extension to make it easier to apply the gradient background
 extension View {
     func withGradientBackground(
-        startColor: Color = Color.blue.opacity(0.6),
-        middleColor: Color = Color.purple.opacity(0.4),
-        endColor: Color = Color.pink.opacity(0.6)
+        startColor: Color? = nil,
+        middleColor: Color? = nil,
+        endColor: Color? = nil
     ) -> some View {
-        self.modifier(GradientBackgroundModifier(
-            startColor: startColor,
-            middleColor: middleColor,
-            endColor: endColor
-        ))
+        self.modifier(
+            GradientBackgroundModifier(
+                startColor: startColor,
+                middleColor: middleColor,
+                endColor: endColor
+            ))
     }
 }
 
 #Preview {
     GradientBackground()
+        .environmentObject(SettingsViewModel())
 }

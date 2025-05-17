@@ -40,8 +40,10 @@ extension JournalRowView {
     
     private var formView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(journal.title)
-                .font(.headline)
+            if journal.title != "" {
+                Text(journal.title)
+                    .font(.headline)
+            }
 
             Text(journal.notes)
                 .font(.subheadline)

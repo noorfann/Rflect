@@ -12,23 +12,19 @@ struct JournalDetailView: View {
     // MARK: - Environment
     @StateObject private var detailVM: JournalDetailViewModel
     @Environment(\.dismiss) private var dismiss
-    
+
     // MARK: - Initialization
     init(journal: JournalModel, journalVM: JournalViewModel) {
         _detailVM = StateObject(
             wrappedValue: JournalDetailViewModel(
                 journal: journal, journalViewModel: journalVM))
     }
-    
+
     // MARK: - Body
     var body: some View {
         ZStack {
-            GradientBackground(
-                startColor: Color.theme.background.opacity(0.1),
-                middleColor: Color.theme.background.opacity(0.6),
-                endColor: Color.theme.background.opacity(0.8)
-            )
-            
+            GradientBackground()
+
             VStack(spacing: 0) {
                 // Date display
                 HStack {
@@ -38,18 +34,28 @@ struct JournalDetailView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 10)
-                
+
                 // Mood selection
                 moodSelection
-                
+
                 // Journal form
                 journalForm
-                
-                Spacer()
-                
-                // Submit button
-                submitButton
             }
+
+            // Floating Action Button
+            VStack {
+                Spacer()
+                FloatingActionButton(
+                    action: {
+                        if detailVM.saveJournal() {
+                            dismiss()
+                        }
+                    }, icon: "checkmark"
+                )
+                .disabled(!detailVM.isValid)
+            }
+            .padding(.trailing, 20)
+            .padding(.bottom, 20)
             .padding()
             .frame(maxWidth: .infinity)
             .navigationTitle("Journal Detail")
@@ -73,14 +79,16 @@ extension JournalDetailView {
                     Text(mood.emoji)
                         .font(.largeTitle)
                         .padding()
-                        .background(detailVM.selectedMood == mood ? Color.accentColor.opacity(0.3) : .clear)
+                        .background(
+                            detailVM.selectedMood == mood ? Color.accentColor.opacity(0.3) : .clear
+                        )
                         .clipShape(Circle())
                 }
             }
         }
         .padding(.top, 20)
     }
-    
+
     private var journalForm: some View {
         VStack(spacing: 0) {
             TextField("Title", text: $detailVM.title)
@@ -89,7 +97,7 @@ extension JournalDetailView {
                 .padding()
                 .background(Color.white.opacity(0.1))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
-            
+
             TextEditorWithPlaceholder(text: $detailVM.notes, placeholder: "Write your thoughts...")
                 .padding(.horizontal)
                 .background(Color.white.opacity(0.1))
@@ -100,39 +108,21 @@ extension JournalDetailView {
         .padding(.horizontal)
         .padding(.top, 10)
     }
-    
-    private var submitButton: some View {
-        Button {
-            if detailVM.saveJournal() {
-                dismiss()
-            }
-        } label: {
-            Text("Save")
-                .font(.headline)
-                .foregroundStyle(Color.primary)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(.thinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.horizontal)
-        }
-        .disabled(!detailVM.isValid)
-        .padding(.bottom)
-    }
 }
-
 
 // MARK: - Preview
 #Preview {
     NavigationView {
-        NavigationLink(destination: JournalDetailView(
-            journal: JournalModel(
-                title: "Sample Title",
-                notes: "Sample notes for preview",
-                mood: .happy
-            ),
-            journalVM: JournalViewModel.preview
-        )) {
+        NavigationLink(
+            destination: JournalDetailView(
+                journal: JournalModel(
+                    title: "Sample Title",
+                    notes: "Sample notes for preview",
+                    mood: .happy
+                ),
+                journalVM: JournalViewModel.preview
+            )
+        ) {
             Text("Navigate to Detail")
         }
     }

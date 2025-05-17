@@ -19,6 +19,7 @@ Rflect/
 - Models must use `@Model` macro for SwiftData compatibility
 - ViewModels must be marked with `@MainActor`
 - Views must use `@EnvironmentObject` for shared view model access
+- Import statements can be omitted in VSCode as the app runs in Xcode
 
 ### Data Model Requirements
 - Models must have unique identifiers using `@Attribute(.unique)`
@@ -31,11 +32,11 @@ Rflect/
 - Use `@Published` for observable properties
 - Include CRUD operations
 - Handle errors gracefully with try-catch blocks
-- Implement preview providers for testing
+- Implement preview providers for testing with in-memory storage
 
 ### View Guidelines
 - Use `NavigationStack` for navigation
-- Implement proper state management with `@State`
+- Implement proper state management with `@State` and `@EnvironmentObject`
 - Follow iOS design patterns for sheets and navigation
 - Include preview providers
 - Use custom components for reusability
@@ -53,7 +54,7 @@ Rflect/
 
 ### Preview Requirements
 - Include preview providers for views
-- Use in-memory storage for previews
+- Use in-memory storage for previews with ModelContainer
 - Provide sample data for testing
 
 ### Code Style
@@ -74,7 +75,11 @@ class JournalModel {
     var notes: String
     var moodValue: Int
     
-    // Proper initialization
+    var mood: Mood {
+        get { Mood(rawValue: moodValue) ?? .neutral }
+        set { moodValue = newValue.rawValue }
+    }
+
     init(title: String, notes: String, mood: Mood) {
         self.id = UUID()
         self.date = Date()
@@ -99,7 +104,9 @@ class JournalViewModel: ObservableObject {
     }
     
     func loadJournals() {
-        // Implementation with error handling
+        let descriptor = FetchDescriptor<JournalModel>(sortBy: [
+            SortDescriptor(\.date, order: .reverse)
+        ])
         do {
             journals = try context.fetch(descriptor)
         } catch {
@@ -112,12 +119,16 @@ class JournalViewModel: ObservableObject {
 ### View Example
 ```swift
 struct HomeView: View {
-    @EnvironmentObject private var viewModel: JournalViewModel
-    @State private var showingJournalForm = false
+    @EnvironmentObject private var journalVM: JournalViewModel
+    @EnvironmentObject private var viewModel: HomeViewModel
+    @EnvironmentObject private var settings: SettingsViewModel
     
     var body: some View {
         NavigationStack {
-            // Implementation
+            TabView {
+                // Implementation
+            }
+            .navigationTitle("Rflect")
         }
     }
 }

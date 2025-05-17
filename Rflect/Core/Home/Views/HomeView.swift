@@ -10,7 +10,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var journalVM: JournalViewModel
-    @StateObject private var viewModel = HomeViewModel()
+    @EnvironmentObject private var viewModel: HomeViewModel
 
     var body: some View {
         NavigationStack {
@@ -34,10 +34,23 @@ struct HomeView: View {
                 JournalFormView(initialDate: viewModel.selectedDate)
                     .presentationCornerRadius(16)
             }
+            .sheet(isPresented: $viewModel.showingSettings) {
+                SettingsView()
+                    .presentationDragIndicator(.visible)
+            }
             .navigationTitle("Rflect")
             .navigationDestination(isPresented: $viewModel.isShowingDetail) {
                 if let journal = viewModel.selectedJournal {
                     JournalDetailView(journal: journal, journalVM: journalVM)
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewModel.showingSettings = true
+                    } label: {
+                        Image(systemName: "gear")
+                    }
                 }
             }
         }
@@ -47,12 +60,9 @@ struct HomeView: View {
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        //        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        //        let container = try! ModelContainer(for: JournalModel.self, configurations: config)
-        //        let context = ModelContext(container)
-
-        return HomeView()
-    }
+#Preview {
+    HomeView()
+        .environmentObject(JournalViewModel.preview)
+        .environmentObject(HomeViewModel())
+        .environmentObject(SettingsViewModel())
 }

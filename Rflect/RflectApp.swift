@@ -8,15 +8,15 @@
 import SwiftData
 import SwiftUI
 
-// No top-level code before @main attribute
 @main
 struct RflectApp: App {
     // SwiftData container for the app
     let container: ModelContainer
 
-    // Initialize the viewModel with the container's context
+    // Initialize the viewModels with the container's context
     @StateObject private var journalVM: JournalViewModel
     @StateObject private var homeVM = HomeViewModel()
+    @StateObject private var settingsVM = SettingsViewModel()
 
     init() {
         do {
@@ -37,6 +37,7 @@ struct RflectApp: App {
             HomeView()
                 .environmentObject(journalVM)
                 .environmentObject(homeVM)
+                .environmentObject(settingsVM)
         }
     }
 }

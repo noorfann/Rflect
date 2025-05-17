@@ -10,13 +10,14 @@ struct FloatingActionButton: View {
             action()
         } label: {
             Image(systemName: icon)
-                .font(.headline)
+                .font(.title2)
                 .foregroundColor(.white)
-                .padding()
+                .padding(20)
                 .background(Color.accentColor)
                 .clipShape(Circle())
                 .shadow(radius: 4, x: 0, y: 4)
         }
+        .padding()
     }
 }
 
