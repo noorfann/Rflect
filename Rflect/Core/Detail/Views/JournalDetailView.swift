@@ -24,9 +24,9 @@ struct JournalDetailView: View {
     var body: some View {
         ZStack {
             GradientBackground(
-                startColor: Color.blue.opacity(0.1),
-                middleColor: Color.blue.opacity(0.6),
-                endColor: Color.blue.opacity(0.8)
+                startColor: Color.theme.background.opacity(0.1),
+                middleColor: Color.theme.background.opacity(0.6),
+                endColor: Color.theme.background.opacity(0.8)
             )
             
             VStack(spacing: 0) {
@@ -109,9 +109,10 @@ extension JournalDetailView {
         } label: {
             Text("Save")
                 .font(.headline)
+                .foregroundStyle(Color.primary)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial)
+                .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
         }

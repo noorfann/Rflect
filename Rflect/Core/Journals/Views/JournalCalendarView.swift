@@ -20,9 +20,9 @@ struct JournalCalendarView: View {
     var body: some View {
         ZStack {
             GradientBackground(
-                startColor: Color.blue.opacity(0.1),
-                middleColor: Color.blue.opacity(0.6),
-                endColor: Color.blue.opacity(0.8)
+                startColor: Color.theme.background.opacity(0.1),
+                middleColor: Color.theme.background.opacity(0.6),
+                endColor: Color.theme.accent.opacity(0.8)
             )
 
             VStack(spacing: 0) {
@@ -86,6 +86,7 @@ extension JournalCalendarView {
             }
             .padding(.bottom)
         }
+        .padding(.top, 12)
         .overlay(alignment: .bottomTrailing) {
             FloatingActionButton(action: {
                 homeVM.showingJournalForm = true

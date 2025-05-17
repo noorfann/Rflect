@@ -26,39 +26,38 @@ struct JournalFormView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                datePicker
-                
-                // select mood of todays
-                moodSelection
-                
-                // insert journal with title and titleDesc
-                journalForm
-                
-                Spacer()
-                
-                // submit journal
-                submitButton
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .navigationTitle("How's today?")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    XMarkButton {
-                        dismiss()
+            ZStack {
+                GradientBackground(
+                    startColor: Color.theme.background.opacity(0.1),
+                    middleColor: Color.theme.background.opacity(0.6),
+                    endColor: Color.theme.accent.opacity(0.8)
+                )
+                VStack(spacing: 0) {
+                    datePicker
+                    
+                    // select mood of todays
+                    moodSelection
+                    
+                    // insert journal with title and titleDesc
+                    journalForm
+                    
+                    Spacer()
+                    
+                    // submit journal
+                    submitButton
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .navigationTitle("How's today?")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        XMarkButton {
+                            dismiss()
+                        }
                     }
                 }
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color.white.opacity(0.2))
-                )
-        )
         .onAppear {
             if let initialDate = initialDate {
                 entryDate = initialDate
@@ -125,9 +124,10 @@ extension JournalFormView {
         }) {
             Text("Save")
                 .font(.headline)
+                .foregroundStyle(Color.primary)
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(.ultraThinMaterial)
+                .background(.thinMaterial)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
         }

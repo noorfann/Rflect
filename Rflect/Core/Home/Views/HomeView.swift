@@ -32,7 +32,6 @@ struct HomeView: View {
             .accentColor(.blue)
             .sheet(isPresented: $viewModel.showingJournalForm) {
                 JournalFormView(initialDate: viewModel.selectedDate)
-                    .presentationBackground(.clear)
                     .presentationCornerRadius(16)
             }
             .navigationTitle("Rflect")
