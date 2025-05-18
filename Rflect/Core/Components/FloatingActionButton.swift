@@ -5,17 +5,17 @@ struct FloatingActionButton: View {
     var action: () -> Void
     var icon: String = "plus"
 
+
     var body: some View {
         Button {
             action()
         } label: {
             Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.white)
-                .padding(20)
-                .background(Color.accentColor)
-                .clipShape(Circle())
-                .shadow(radius: 4, x: 0, y: 4)
+                .font(.title3.bold())
+                .foregroundStyle(.white)
+                .frame(width: 56, height: 56)
+                .background(Circle().fill(Color.theme.accent))
+                .shadow(color: Color.theme.accent.opacity(0.3), radius: 10, x: 0, y: 5)
         }
         .padding()
     }

@@ -1,5 +1,5 @@
 //
-//  JournalRowView.swift
+//  JournalRow.swift
 //  Rflect
 //
 //  Created by Zulfikar Noorfan on 14/05/25.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct JournalRowView: View {
+struct JournalRow: View {
     let journal: JournalModel
-    
+
     var body: some View {
-        HStack (alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             emojisView
-            formView
+            contentView
             Spacer()
         }
         .padding()
@@ -29,7 +29,7 @@ struct JournalRowView: View {
     }
 }
 
-extension JournalRowView {
+extension JournalRow {
     private var emojisView: some View {
         Text(journal.mood.emoji)
             .font(.largeTitle)
@@ -37,28 +37,31 @@ extension JournalRowView {
             .background(Color.accentColor.opacity(0.2))
             .clipShape(Circle())
     }
-    
-    private var formView: some View {
+
+    private var contentView: some View {
         VStack(alignment: .leading, spacing: 4) {
             if journal.title != "" {
                 Text(journal.title)
                     .font(.headline)
+                    .foregroundColor(Color.primary)
             }
 
             Text(journal.notes)
                 .font(.subheadline)
                 .lineLimit(2)
-                .foregroundColor(.secondary)
-            
+                .foregroundColor(Color.theme.secondaryText)
+
             Text(journal.date.formatted(date: .abbreviated, time: .shortened))
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(Color.theme.secondaryText)
         }
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    JournalRowView(journal: JournalModel(title: "Test journal", notes: "This is today journal", mood: .happy))
-        .padding()
-        .background(Color.gray.opacity(0.2))
+    JournalRow(
+        journal: JournalModel(title: "Test journal", notes: "This is today journal", mood: .happy)
+    )
+    .padding()
+    .background(Color.gray.opacity(0.2))
 }

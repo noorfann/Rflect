@@ -11,27 +11,37 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var journalVM: JournalViewModel
     @EnvironmentObject private var viewModel: HomeViewModel
-
+    @Environment(\.colorScheme) private var colorScheme
+    
     var body: some View {
         NavigationStack {
-            TabView {
-                // List View
-                JournalListView()
-                    .environmentObject(viewModel)
-                    .tabItem {
-                        Label("List", systemImage: "book.fill")
-                    }
-
-                // Calendar View
-                JournalCalendarView()
-                    .environmentObject(viewModel)
-                    .tabItem {
-                        Label("Calendar", systemImage: "calendar")
-                    }
+            ZStack(alignment: .bottom) {
+                TabView(selection: $viewModel.selectedTab) {
+                    // List View
+                    JournalListView()
+                        .tag(Tab.list)
+                        .tabItem {
+                            Label("List", systemImage: "book.fill")
+                        }
+                        .toolbar(.hidden, for: .tabBar)
+                    
+                    // Calendar View
+                    JournalCalendarView()
+                        .tag(Tab.calendar)
+                        .tabItem {
+                            Label("Calendar", systemImage: "calendar")
+                        }
+                        .toolbar(.hidden, for: .tabBar)
+                }
+                
+                // Custom TabBar
+                CustomTabBarView(selectedTab: $viewModel.selectedTab, showingJournalForm: $viewModel.showingJournalForm)
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
             }
             .accentColor(.blue)
             .sheet(isPresented: $viewModel.showingJournalForm) {
-                JournalFormView(initialDate: viewModel.selectedDate)
+                JournalFormView(initialDate: journalVM.selectedDate)
                     .presentationCornerRadius(16)
             }
             .sheet(isPresented: $viewModel.showingSettings) {

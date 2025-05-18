@@ -15,17 +15,19 @@ struct RflectApp: App {
 
     // Initialize the viewModels with the container's context
     @StateObject private var journalVM: JournalViewModel
+    @StateObject private var templateVM: TemplateViewModel
     @StateObject private var homeVM = HomeViewModel()
     @StateObject private var settingsVM = SettingsViewModel()
 
     init() {
         do {
-            // Create a persistent container for JournalEntry
-            container = try ModelContainer(for: JournalModel.self)
+            // Create a persistent container
+            container = try ModelContainer(for: JournalModel.self, TemplateModel.self)
 
             // Initialize the viewModel with the container's context
             let context = container.mainContext
             _journalVM = StateObject(wrappedValue: JournalViewModel(context: context))
+            _templateVM = StateObject(wrappedValue: TemplateViewModel(context: context))
         } catch {
             // Handle container creation failure
             fatalError("Failed to create model container: \(error.localizedDescription)")
@@ -38,6 +40,7 @@ struct RflectApp: App {
                 .environmentObject(journalVM)
                 .environmentObject(homeVM)
                 .environmentObject(settingsVM)
+                .environmentObject(templateVM)
         }
     }
 }

@@ -20,24 +20,24 @@ struct JournalListView: View {
                     homeVM.showingJournalForm = true
                 })
             } else {
-                List(journalVM.journals) { journal in
-                    JournalRowView(journal: journal)
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .onTapGesture {
-                            homeVM.selectedJournal = journal
-                            homeVM.isShowingDetail = true
-                        }
+                VStack(spacing: 10) {
+                    calendarView
+                    List(journalVM.journals) { journal in
+                        JournalRow(journal: journal)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                            .onTapGesture {
+                                homeVM.selectedJournal = journal
+                                homeVM.isShowingDetail = true
+                            }
+                    }
+                    .listStyle(.plain)
+                    .listRowSpacing(0)
+                    .safeAreaInset(edge: .bottom) {
+                        Color.clear.frame(height: 100)
+                    }
                 }
-                .listStyle(.plain)
-                .listRowSpacing(0)
             }
-
-            FloatingActionButton(action: {
-                homeVM.showingJournalForm = true
-            })
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         }
     }
 }
@@ -47,5 +47,22 @@ struct JournalListView: View {
         JournalListView()
             .environmentObject(JournalViewModel.preview)
             .environmentObject(HomeViewModel.preview)
+    }
+}
+
+extension JournalListView {
+    private var calendarView: some View {
+        DatePicker(
+            "Select Date", selection: $journalVM.selectedDate, displayedComponents: [.date]
+        )
+        .datePickerStyle(.compact)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.ultraThinMaterial)
+                .shadow(radius: 5)
+        )
+        .padding(.horizontal)
+        .padding(.top)
     }
 }

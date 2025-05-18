@@ -15,6 +15,7 @@ private var journalModelReference = JournalModel.self
 @MainActor
 class JournalViewModel: ObservableObject {
     @Published var journals: [JournalModel] = []
+    @Published var selectedDate: Date = Date()
 
     private var context: ModelContext
 
@@ -61,6 +62,12 @@ class JournalViewModel: ObservableObject {
         journal.notes = notes
         journal.mood = mood
         save()
+    }
+    
+    var filteredEntries: [JournalModel] {
+        journals.filter {
+            Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
+        }
     }
 }
 

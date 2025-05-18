@@ -10,26 +10,24 @@ import SwiftUI
 struct TextEditorWithPlaceholder: View {
     @Binding var text: String
     let placeholder: String
-    
+
     var body: some View {
-        ZStack(alignment: .leading) {
+        ZStack(alignment: .topLeading) {  // Change to topLeading
             if text.isEmpty {
-               VStack {
-                    Text(placeholder)
-                        .padding(.top, 10)
-                        .padding(.leading, 6)
-                        .opacity(0.4)
-                    Spacer()
-                }
+                Text(placeholder)
+                    .padding(.top, 10)
+                    .padding(.leading, 6)
+                    .opacity(0.4)
             }
-            
-            VStack {
-                TextEditor(text: $text)
-                    .frame(minHeight: 150, maxHeight: 300)
-                    .opacity(text.isEmpty ? 0.85 : 1)
-                Spacer()
-            }
+
+            TextEditor(text: $text)
+                .opacity(text.isEmpty ? 0.85 : 1)
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
+                .scrollContentBackground(.hidden)
+            // Remove fixed height constraints
         }
+        .frame(maxWidth: .infinity, minHeight: 150)
     }
 }
 

@@ -18,47 +18,18 @@ struct SettingsView: View {
                     Toggle("Show Title on Journal Form", isOn: $settings.showJournalTitle)
                 }
 
-                Section(
-                    footer: Text(
-                        "These colors will be applied to all gradient backgrounds in the app.")
-                ) {
-                    ColorPicker("Start Color", selection: $settings.gradientStartColor)
-                    ColorPicker("Middle Color", selection: $settings.gradientMiddleColor)
-                    ColorPicker("End Color", selection: $settings.gradientEndColor)
-
-                    Button(role: .destructive) {
-                        settings.resetColors()
+                Section("Templates") {
+                    NavigationLink {
+                        TemplatesView()
                     } label: {
-                        Text("Reset to Default Colors")
+                        Label("Manage Templates", systemImage: "doc.text")
                     }
-
-                    // Preview
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Preview")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        settings.gradientStartColor,
-                                        settings.gradientMiddleColor,
-                                        settings.gradientEndColor,
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(height: 100)
-                    }
-                    .padding(.top, 8)
                 }
             }
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    XMarkButton {
                         dismiss()
                     }
                 }

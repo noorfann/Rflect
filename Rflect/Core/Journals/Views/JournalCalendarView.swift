@@ -11,12 +11,6 @@ struct JournalCalendarView: View {
     @EnvironmentObject private var journalVM: JournalViewModel
     @EnvironmentObject private var homeVM: HomeViewModel
 
-    private var filteredEntries: [JournalModel] {
-        journalVM.journals.filter {
-            Calendar.current.isDate($0.date, inSameDayAs: homeVM.selectedDate)
-        }
-    }
-
     var body: some View {
         ZStack {
             GradientBackground()
@@ -25,7 +19,7 @@ struct JournalCalendarView: View {
                 calendarView
                 journalsHeader
 
-                if filteredEntries.isEmpty {
+                if journalVM.filteredEntries.isEmpty {
                     journalEmptyList
                 } else {
                     journalList
@@ -38,7 +32,7 @@ struct JournalCalendarView: View {
 extension JournalCalendarView {
     private var calendarView: some View {
         DatePicker(
-            "Select Date", selection: $homeVM.selectedDate, displayedComponents: [.date]
+            "Select Date", selection: $journalVM.selectedDate, displayedComponents: [.date]
         )
         .datePickerStyle(.graphical)
         .padding()
@@ -53,14 +47,13 @@ extension JournalCalendarView {
 
     private var journalsHeader: some View {
         HStack {
-            Text(homeVM.selectedDate.formatted(date: .long, time: .omitted))
+            Text(journalVM.selectedDate.formatted(date: .long, time: .omitted))
                 .font(.headline)
-                .foregroundColor(.white)
 
             Spacer()
 
-            Text("\(filteredEntries.count) entries")
-                .foregroundColor(.white.opacity(0.8))
+            Text("\(journalVM.filteredEntries.count) entries")
+                .foregroundStyle(Color.theme.secondaryText)
                 .font(.subheadline)
         }
         .padding(.horizontal)
@@ -70,8 +63,8 @@ extension JournalCalendarView {
     private var journalList: some View {
         ScrollView {
             VStack(spacing: 8) {
-                ForEach(filteredEntries) { journal in
-                    JournalRowView(journal: journal)
+                ForEach(journalVM.filteredEntries) { journal in
+                    JournalRow(journal: journal)
                         .padding(.horizontal)
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -79,16 +72,12 @@ extension JournalCalendarView {
                             homeVM.isShowingDetail = true
                         }
                 }
+
+                // Add spacer at bottom to prevent content from being hidden by tab bar
+                Spacer().frame(height: 100)
             }
-            .padding(.bottom)
         }
         .padding(.top, 12)
-        .overlay(alignment: .bottomTrailing) {
-            FloatingActionButton(action: {
-                homeVM.showingJournalForm = true
-            })
-            .padding()
-        }
     }
 
     private var journalEmptyList: some View {
@@ -100,10 +89,6 @@ extension JournalCalendarView {
             Text("No entries for this date")
                 .font(.headline)
                 .foregroundColor(.white)
-
-            FloatingActionButton(action: {
-                homeVM.showingJournalForm = true
-            })
 
             Spacer()
         }

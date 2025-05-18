@@ -58,7 +58,7 @@ struct JournalDetailView: View {
             .padding(.bottom, 20)
             .padding()
             .frame(maxWidth: .infinity)
-            .navigationTitle("Journal Detail")
+//            .navigationTitle("Journal Detail")
         }
         .alert("Error", isPresented: $detailVM.showingAlert) {
             Button("OK") {}
@@ -97,13 +97,15 @@ extension JournalDetailView {
                 .padding()
                 .background(Color.white.opacity(0.1))
                 .cornerRadius(10, corners: [.topLeft, .topRight])
+                .autocorrectionDisabled(true)
+                .textInputAutocapitalization(.never)
 
             TextEditorWithPlaceholder(text: $detailVM.notes, placeholder: "Write your thoughts...")
+                .foregroundStyle(Color.theme.secondaryText)
                 .padding(.horizontal)
                 .background(Color.white.opacity(0.1))
                 .scrollContentBackground(.hidden)
                 .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
-                .foregroundStyle(Color.theme.secondaryText)
         }
         .padding(.horizontal)
         .padding(.top, 10)
