@@ -14,11 +14,13 @@ class HomeViewModel: ObservableObject {
     @Published var selectedJournal: JournalModel?
     @Published var isShowingDetail = false
     @Published var selectedTab: Tab = .list
+    @Published var showDeleteConfirmation = false
+    @Published var journalToDelete: JournalModel? = nil
 
     static var preview: HomeViewModel {
         let vm = HomeViewModel()
         // Add any preview data if needed
         return vm
     }
-    
+
 }

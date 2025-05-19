@@ -22,22 +22,31 @@ struct JournalListView: View {
             } else {
                 VStack(spacing: 10) {
                     calendarView
-                    List(journalVM.journals) { journal in
-                        JournalRow(journal: journal)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .onTapGesture {
+                    journalsHeader
+
+                    if journalVM.filteredEntries.isEmpty {
+                        journalEmptyList
+                    } else {
+                        JournalListComponent(
+                            journals: journalVM.filteredEntries,
+                            onTapJournal: { journal in
                                 homeVM.selectedJournal = journal
                                 homeVM.isShowingDetail = true
+                            },
+                            onDeleteJournal: { journal in
+                                homeVM.journalToDelete = journal
+                                homeVM.showDeleteConfirmation = true
                             }
-                    }
-                    .listStyle(.plain)
-                    .listRowSpacing(0)
-                    .safeAreaInset(edge: .bottom) {
-                        Color.clear.frame(height: 100)
+                        )
                     }
                 }
             }
+        }
+        .deleteConfirmation(
+            isPresented: $homeVM.showDeleteConfirmation,
+            itemToDelete: $homeVM.journalToDelete
+        ) { journal in
+            journalVM.deleteJournal(journal)
         }
     }
 }
@@ -64,5 +73,34 @@ extension JournalListView {
         )
         .padding(.horizontal)
         .padding(.top)
+    }
+
+    private var journalsHeader: some View {
+        HStack {
+            Text(journalVM.selectedDate.formatted(date: .long, time: .omitted))
+                .font(.headline)
+
+            Spacer()
+
+            Text("\(journalVM.filteredEntries.count) entries")
+                .foregroundStyle(Color.theme.secondaryText)
+                .font(.subheadline)
+        }
+        .padding(.horizontal)
+        .padding(.top, 12)
+    }
+
+    private var journalEmptyList: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Image(systemName: "square.and.pencil")
+                .font(.system(size: 50))
+                .foregroundColor(.white.opacity(0.8))
+            Text("No entries for this date")
+                .font(.headline)
+                .foregroundColor(.white)
+
+            Spacer()
+        }
     }
 }

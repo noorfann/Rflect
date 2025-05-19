@@ -18,6 +18,8 @@ struct RflectApp: App {
     @StateObject private var templateVM: TemplateViewModel
     @StateObject private var homeVM = HomeViewModel()
     @StateObject private var settingsVM = SettingsViewModel()
+    
+    @State private var showLaunchView: Bool = true
 
     init() {
         do {
@@ -36,11 +38,21 @@ struct RflectApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
-                .environmentObject(journalVM)
-                .environmentObject(homeVM)
-                .environmentObject(settingsVM)
-                .environmentObject(templateVM)
+            ZStack {
+                HomeView()
+                    .environmentObject(journalVM)
+                    .environmentObject(homeVM)
+                    .environmentObject(settingsVM)
+                    .environmentObject(templateVM)
+                
+                ZStack {
+                    if showLaunchView {
+                        LaunchView(showLaunchView: $showLaunchView)
+                            .transition(.move(edge: .leading))
+                    }
+                }
+                .zIndex(2.0)
+            }
         }
     }
 }

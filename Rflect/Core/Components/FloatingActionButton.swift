@@ -1,10 +1,9 @@
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct FloatingActionButton: View {
     var action: () -> Void
     var icon: String = "plus"
-
+    @Environment(\.isEnabled) private var isEnabled
 
     var body: some View {
         Button {
@@ -14,13 +13,25 @@ struct FloatingActionButton: View {
                 .font(.title3.bold())
                 .foregroundStyle(.white)
                 .frame(width: 56, height: 56)
-                .background(Circle().fill(Color.theme.accent))
-                .shadow(color: Color.theme.accent.opacity(0.3), radius: 10, x: 0, y: 5)
+                .background(
+                    Circle()
+                        .fill(isEnabled ? Color.theme.accent : Color.gray.opacity(0.5))
+                )
+                .shadow(
+                    color: isEnabled ? Color.theme.accent.opacity(0.3) : Color.gray.opacity(0.1),
+                    radius: 10, x: 0, y: 5
+                )
+                .animation(.easeInOut(duration: 0.2), value: isEnabled)
         }
         .padding()
     }
 }
 
 #Preview {
-    FloatingActionButton(action: {})
+    VStack(spacing: 20) {
+        FloatingActionButton(action: {})
+
+        FloatingActionButton(action: {})
+            .disabled(true)
+    }
 }

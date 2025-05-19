@@ -22,9 +22,25 @@ struct JournalCalendarView: View {
                 if journalVM.filteredEntries.isEmpty {
                     journalEmptyList
                 } else {
-                    journalList
+                    JournalListComponent(
+                        journals: journalVM.filteredEntries,
+                        onTapJournal: { journal in
+                            homeVM.selectedJournal = journal
+                            homeVM.isShowingDetail = true
+                        },
+                        onDeleteJournal: { journal in
+                            homeVM.journalToDelete = journal
+                            homeVM.showDeleteConfirmation = true
+                        }
+                    )
                 }
             }
+        }
+        .deleteConfirmation(
+            isPresented: $homeVM.showDeleteConfirmation,
+            itemToDelete: $homeVM.journalToDelete
+        ) { journal in
+            journalVM.deleteJournal(journal)
         }
     }
 }
@@ -57,26 +73,6 @@ extension JournalCalendarView {
                 .font(.subheadline)
         }
         .padding(.horizontal)
-        .padding(.top, 12)
-    }
-
-    private var journalList: some View {
-        ScrollView {
-            VStack(spacing: 8) {
-                ForEach(journalVM.filteredEntries) { journal in
-                    JournalRow(journal: journal)
-                        .padding(.horizontal)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            homeVM.selectedJournal = journal
-                            homeVM.isShowingDetail = true
-                        }
-                }
-
-                // Add spacer at bottom to prevent content from being hidden by tab bar
-                Spacer().frame(height: 100)
-            }
-        }
         .padding(.top, 12)
     }
 

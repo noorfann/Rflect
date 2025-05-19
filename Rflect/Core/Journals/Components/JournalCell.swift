@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct JournalRow: View {
+struct JournalCell: View {
     let journal: JournalModel
 
     var body: some View {
@@ -29,7 +29,7 @@ struct JournalRow: View {
     }
 }
 
-extension JournalRow {
+extension JournalCell {
     private var emojisView: some View {
         Text(journal.mood.emoji)
             .font(.largeTitle)
@@ -59,7 +59,7 @@ extension JournalRow {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    JournalRow(
+    JournalCell(
         journal: JournalModel(title: "Test journal", notes: "This is today journal", mood: .happy)
     )
     .padding()

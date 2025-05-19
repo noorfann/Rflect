@@ -41,23 +41,6 @@ struct JournalDetailView: View {
                 // Journal form
                 journalForm
             }
-
-            // Floating Action Button
-            VStack {
-                Spacer()
-                FloatingActionButton(
-                    action: {
-                        if detailVM.saveJournal() {
-                            dismiss()
-                        }
-                    }, icon: "checkmark"
-                )
-                .disabled(!detailVM.isValid)
-            }
-            .padding(.trailing, 20)
-            .padding(.bottom, 20)
-            .padding()
-            .frame(maxWidth: .infinity)
 //            .navigationTitle("Journal Detail")
         }
         .alert("Error", isPresented: $detailVM.showingAlert) {
@@ -109,6 +92,29 @@ extension JournalDetailView {
         }
         .padding(.horizontal)
         .padding(.top, 10)
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                floatingButton
+            }
+        }
+    }
+    
+    private var floatingButton: some View {
+        HStack {
+            Spacer()
+            FloatingActionButton(
+                action: {
+                    if detailVM.saveJournal() {
+                        dismiss()
+                    }
+                }, icon: "checkmark"
+            )
+            .disabled(!detailVM.isValid)
+        }
+        .padding(.trailing, 20)
+        .padding(.bottom, 20)
+        .padding()
+        .frame(maxWidth: .infinity)
     }
 }
 

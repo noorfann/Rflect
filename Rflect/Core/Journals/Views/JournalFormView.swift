@@ -34,10 +34,10 @@ struct JournalFormView: View {
                 GradientBackground()
                 ScrollView {  // Wrap content in ScrollView
                     VStack(spacing: 0) {
-                            datePicker
-                            moodSelection
-                            templateList
-                            journalForm
+                        datePicker
+                        moodSelection
+                        templateList
+                        journalForm
                     }
                     .padding(.bottom, 300)
                     .navigationTitle("How's today?")
