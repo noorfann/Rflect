@@ -41,7 +41,12 @@ struct JournalDetailView: View {
                 // Journal form
                 journalForm
             }
-//            .navigationTitle("Journal Detail")
+            
+            // Position the floating button with overlay instead of in keyboard toolbar
+            VStack {
+                Spacer()
+                floatingButton
+            }
         }
         .alert("Error", isPresented: $detailVM.showingAlert) {
             Button("OK") {}
@@ -92,11 +97,6 @@ extension JournalDetailView {
         }
         .padding(.horizontal)
         .padding(.top, 10)
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                floatingButton
-            }
-        }
     }
     
     private var floatingButton: some View {
@@ -111,10 +111,8 @@ extension JournalDetailView {
             )
             .disabled(!detailVM.isValid)
         }
-        .padding(.trailing, 20)
-        .padding(.bottom, 20)
-        .padding()
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 30)
     }
 }
 

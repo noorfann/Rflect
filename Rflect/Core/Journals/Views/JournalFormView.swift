@@ -39,7 +39,7 @@ struct JournalFormView: View {
                         templateList
                         journalForm
                     }
-                    .padding(.bottom, 300)
+                    .padding(.bottom, 100)  // Reduced padding to avoid conflicts
                     .navigationTitle("How's today?")
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
@@ -49,8 +49,11 @@ struct JournalFormView: View {
                         }
                     }
                 }
-                // Add this to handle keyboard adjustments
-                .ignoresSafeArea(.keyboard)
+                // Position the floating button with overlay instead of in keyboard toolbar
+                VStack {
+                    Spacer()
+                    floatingButton
+                }
             }
         }
         .onAppear {
@@ -136,11 +139,6 @@ extension JournalFormView {
         .padding(.horizontal)
         .padding(.top, 10)
         .padding(.bottom, 60)  // Add extra padding to push content up
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                floatingButton
-            }
-        }
     }
 
     // Dummy template list for testing
@@ -174,6 +172,21 @@ extension JournalFormView {
         .frame(height: 100)
     }
 
+    private var templateList: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(templateVM.userTemplates, id: \.id) { template in
+                    TemplatePreviewCard(template: template) {
+                        applyTemplate(template)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .padding(.vertical, 8)
+        .background(Color.theme.background.opacity(0.05))
+    }
+    
     private var floatingButton: some View {
         HStack {
             Spacer()
@@ -190,30 +203,13 @@ extension JournalFormView {
                 icon: "checkmark"
             )
             .disabled(
-                (settingsVM.showJournalTitle && title.trimmingCharacters(in: .whitespaces).isEmpty)
-                    || notes.trimmingCharacters(in: .whitespaces).isEmpty  // Also check if notes is empty
+                (settingsVM.showJournalTitle
+                    && title.trimmingCharacters(in: .whitespaces).isEmpty)
+                    || notes.trimmingCharacters(in: .whitespaces).isEmpty
             )
-            .contentShape(Rectangle())  // Add this to improve tappable area
         }
-        .padding(.trailing, 20)
-        .padding(.bottom, 20)
-        .padding()
-        .frame(maxWidth: .infinity)
-    }
-
-    private var templateList: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(templateVM.userTemplates, id: \.id) { template in
-                    TemplatePreviewCard(template: template) {
-                        applyTemplate(template)
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-        .padding(.vertical, 8)
-        .background(Color.theme.background.opacity(0.05))
+        .padding(.horizontal, 20)
+        .padding(.bottom, 30)
     }
 }
 

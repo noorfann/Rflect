@@ -21,6 +21,8 @@ struct JournalCalendarView: View {
 
                 if journalVM.filteredEntries.isEmpty {
                     journalEmptyList
+                        .transition(.opacity)
+                        .animation(.easeInOut, value: journalVM.filteredEntries.isEmpty)
                 } else {
                     JournalListComponent(
                         journals: journalVM.filteredEntries,
@@ -33,6 +35,8 @@ struct JournalCalendarView: View {
                             homeVM.showDeleteConfirmation = true
                         }
                     )
+                    .transition(.opacity)
+                    .animation(.easeInOut, value: journalVM.filteredEntries.isEmpty)
                 }
             }
         }

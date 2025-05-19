@@ -38,14 +38,18 @@ class JournalViewModel: ObservableObject {
     func addJournal(title: String, notes: String, mood: Mood, date: Date = Date()) {
         let newEntry = JournalModel(title: title, notes: notes, mood: mood)
         newEntry.date = date
-        context.insert(newEntry)
 
-        save()
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+            context.insert(newEntry)
+            save()
+        }
     }
 
     func deleteJournal(_ entry: JournalModel) {
-        context.delete(entry)
-        save()
+        withAnimation(.easeInOut(duration: 0.3)) {
+            context.delete(entry)
+            save()
+        }
     }
 
     func save() {
@@ -63,7 +67,7 @@ class JournalViewModel: ObservableObject {
         journal.mood = mood
         save()
     }
-    
+
     var filteredEntries: [JournalModel] {
         journals.filter {
             Calendar.current.isDate($0.date, inSameDayAs: selectedDate)
