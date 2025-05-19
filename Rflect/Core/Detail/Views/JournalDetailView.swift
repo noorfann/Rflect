@@ -41,7 +41,7 @@ struct JournalDetailView: View {
                 // Journal form
                 journalForm
             }
-            
+
             // Position the floating button with overlay instead of in keyboard toolbar
             VStack {
                 Spacer()
@@ -98,7 +98,7 @@ extension JournalDetailView {
         .padding(.horizontal)
         .padding(.top, 10)
     }
-    
+
     private var floatingButton: some View {
         HStack {
             Spacer()

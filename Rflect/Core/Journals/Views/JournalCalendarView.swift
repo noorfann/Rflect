@@ -24,15 +24,15 @@ struct JournalCalendarView: View {
                         .transition(.opacity)
                         .animation(.easeInOut, value: journalVM.filteredEntries.isEmpty)
                 } else {
+                    // Using JournalListComponent without delete functionality
                     JournalListComponent(
                         journals: journalVM.filteredEntries,
                         onTapJournal: { journal in
                             homeVM.selectedJournal = journal
                             homeVM.isShowingDetail = true
                         },
-                        onDeleteJournal: { journal in
-                            homeVM.journalToDelete = journal
-                            homeVM.showDeleteConfirmation = true
+                        onDeleteJournal: { _ in
+                            // Empty implementation - deletion only handled in JournalListView
                         }
                     )
                     .transition(.opacity)
@@ -40,12 +40,7 @@ struct JournalCalendarView: View {
                 }
             }
         }
-        .deleteConfirmation(
-            isPresented: $homeVM.showDeleteConfirmation,
-            itemToDelete: $homeVM.journalToDelete
-        ) { journal in
-            journalVM.deleteJournal(journal)
-        }
+        // Delete confirmation removed from JournalCalendarView
     }
 }
 
@@ -82,7 +77,6 @@ extension JournalCalendarView {
 
     private var journalEmptyList: some View {
         VStack(spacing: 20) {
-            Spacer()
             Image(systemName: "square.and.pencil")
                 .font(.system(size: 50))
                 .foregroundColor(.white.opacity(0.8))

@@ -27,10 +27,8 @@ struct JournalListComponent: View {
                     }
                     .swipeActions(edge: .trailing) {
                         Button {
-                            // Use DispatchQueue to move the state changes out of the view update cycle
-                            DispatchQueue.main.async {
-                                onDeleteJournal(journal)
-                            }
+                            // Direct call without wrapping in DispatchQueue
+                            onDeleteJournal(journal)
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }

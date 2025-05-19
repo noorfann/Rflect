@@ -14,25 +14,32 @@ struct DeleteConfirmationModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .alert("Delete Journal?", isPresented: $isPresented) {
-                Button("Cancel", role: .cancel) {
-                    // Schedule resetting itemToDelete after the view update
-                    Task { @MainActor in
-                        itemToDelete = nil
-                    }
-                }
-                Button("Delete", role: .destructive) {
-                    if let item = itemToDelete {
-                        onDelete(item)
-                        // Schedule resetting itemToDelete after the view update
-                        Task { @MainActor in
+            .alert(
+                "Delete Journal?", isPresented: $isPresented,
+                actions: {
+                    Button("Cancel", role: .cancel) {
+                        isPresented = false
+                        // Reset after alert is dismissed
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             itemToDelete = nil
                         }
                     }
-                }
-            } message: {
-                Text("Are you sure you want to delete this journal? This action cannot be undone.")
-            }
+                    Button("Delete", role: .destructive) {
+                        if let item = itemToDelete {
+                            onDelete(item)
+                        }
+                        isPresented = false
+                        // Reset after alert is dismissed
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            itemToDelete = nil
+                        }
+                    }
+                },
+                message: {
+                    Text(
+                        "Are you sure you want to delete this journal? This action cannot be undone."
+                    )
+                })
     }
 }
 

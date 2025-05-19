@@ -48,7 +48,7 @@ struct RflectApp: App {
                 ZStack {
                     if showLaunchView {
                         LaunchView(showLaunchView: $showLaunchView)
-                            .transition(.move(edge: .leading))
+                            .transition(.push(from: .trailing))
                     }
                 }
                 .zIndex(2.0)
